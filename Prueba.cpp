@@ -207,3 +207,104 @@ void CargarDiccionario() {
 
     fclose(archivo);
 }
+
+
+string TraducirPalabra(const string &palabra) {
+    // Verifica si la palabra está en el diccionario y tradúcela si es necesario
+    if (diccionario.find(palabra) != diccionario.end()) {
+        return diccionario[palabra];
+    } else {
+        return palabra;
+    }
+}
+
+void TraducirCodigo() {
+    CargarDiccionario();
+    string texto;
+    cout << "Ingrese el texto a traducir (ingrese 'fin' en una línea separada para finalizar):\n";
+
+    int nivelEstructura = 0; // Lleva un seguimiento del nivel de anidamiento de las estructuras
+    bool dentroIf = false;   // Indica si estamos dentro de una estructura if
+
+    while (true) {
+        string linea;
+        getline(cin, linea);
+        
+        if (linea == "fin") {
+            break; // Termina la entrada de texto si se ingresa "fin"
+        }
+
+        texto += linea + "\n"; // Agrega la línea al texto
+
+        if (cin.eof()) {
+            break; // Termina si se alcanza el final del archivo de entrada
+        }
+    }
+
+    // Procesar y traducir el texto
+    string palabra;
+    string textoTraducido;
+
+    for (char c : texto) {
+        if (isalnum(c) || c == '_') {
+            palabra += c;
+        } else {
+            // Verifica si la palabra está en el diccionario y tradúcela si es necesario
+            string palabraTraducida = TraducirPalabra(palabra);
+            if (!palabra.empty()) {
+                textoTraducido += palabraTraducida;
+                palabra.clear();
+            }
+
+            if (c == '{') {
+                nivelEstructura++;
+                if (nivelEstructura == 1 && dentroIf) {
+                    textoTraducido += " inicio si ";
+                } else if (nivelEstructura == 1) {
+                    textoTraducido += " inicio ";
+                } else {
+                    textoTraducido += "{";
+                }
+            } else if (c == '}') {
+                nivelEstructura--;
+                if (nivelEstructura == 0) {
+                    textoTraducido += " fin ";
+                } else {
+                    textoTraducido += "}";
+                }
+            } else if (c == 'i' && nivelEstructura == 1) {
+                // Verifica si estamos dentro de un 'if'
+                string posibleIf = palabra;
+                if (posibleIf == "si" || posibleIf == "entonces") {
+                    dentroIf = true;
+                }
+            } else if (c == 'f' && nivelEstructura == 1 && dentroIf) {
+                // Verifica si estamos dentro de un 'if' y encontramos 'fin'
+                string posibleFin = palabra;
+                if (posibleFin == "fin") {
+                    dentroIf = false;
+                }
+            } else {
+                textoTraducido += c;
+            }
+        }
+    }
+
+    cout << "\nTexto traducido:\n";
+    cout << textoTraducido << endl;
+    cout << "_____________________";
+
+}
+
+void Nosotros(){
+    system("clear");
+    cout<<"Integrantes del grupo:"<<endl;
+    cout<<"----------------------------"<<endl;
+    cout<<"Nombre y apellido | Carnet "<<endl;
+    cout<<"Pablo Montiel     | 3590 23 15883 "<<endl;
+    cout<<"Melvin Ramos      | 5990-23-17316 "<<endl;
+    cout<<"Fredy  Batz       | 3590 23 7848"<<endl;
+    cout<<"Nery Osorio       | 3590-23-22940 "<<endl;
+    cout<<"Francisco Estrada | 5339 23 5990"<<endl;
+    cout<<"_______________________________________"<<endl;
+}
