@@ -150,3 +150,60 @@ void Actualizar(){
         cout<<" la Palabra "<<diccionario.palabra<<" con ID: "<<id<<" fue actualizada exitosamente."<<endl;
          cout<<"                                                                    "<<endl;
 }
+
+void Borrar(){
+    Leer();
+    const char *nombre_archivo_temp = "bd_temp.dat";
+    FILE* archivo_temp = fopen(nombre_archivo_temp,"w+b");
+    FILE* archivo = fopen(nombre_archivo,"rb");
+    //especificar el elemento a eliminar
+    Diccionario diccionario;
+    int id=0,id_n=0;
+
+    cout<<"Ingrese el ID a eliminar: "<<endl;
+    cin>>id;
+
+    while (fread(&diccionario,sizeof(Diccionario),1,archivo)){
+        if (id_n!=id)
+        {
+            fwrite(&diccionario,sizeof(Diccionario),1,archivo_temp);
+        }
+        id_n++;        
+    }
+ 
+    fclose(archivo);
+    fclose(archivo_temp);
+
+        //Crear archivo desde el temporal sin el id que se desea eliminar
+        archivo_temp = fopen(nombre_archivo_temp,"rb");
+        archivo = fopen(nombre_archivo,"wb");
+
+        while (fread(&diccionario,sizeof(Diccionario),1,archivo_temp)){
+        if (id_n!=id)
+        {
+            fwrite(&diccionario,sizeof(Diccionario),1,archivo);
+        }
+        id_n++;        
+        }
+
+        fclose(archivo);
+        fclose(archivo_temp);
+        Leer();
+        cout<<"Se borró con exito la palagra: "<<diccionario.palabra<<" con Id: "<<id<<endl;
+        cout<<"                                                                    "<<endl;
+}
+
+void CargarDiccionario() {
+    FILE *archivo = fopen(nombre_archivo, "rb");
+    if (!archivo) {
+        cerr << "No se pudo abrir el archivo de diccionario." << endl;
+        exit(1);
+    }
+
+    Diccionario palabra;
+    while (fread(&palabra, sizeof(Diccionario), 1, archivo)) {
+        diccionario[palabra.palabra] = palabra.traduccion;
+    }
+
+    fclose(archivo);
+}
