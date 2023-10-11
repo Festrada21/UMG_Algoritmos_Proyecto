@@ -70,3 +70,83 @@ char opt;
     cout<<"Gracias por utilizar nuestro proyecto"<<endl;
     system("pause") ;
 }
+
+void Leer(){
+    system("clear");
+    //abrir un archivo
+    FILE* archivo = fopen(nombre_archivo,"rb");
+    if (!archivo){        
+        FILE* archivo = fopen(nombre_archivo,"w+b");
+    }
+     Diccionario diccionario;
+     int id=0; //indice o posicionicion dentro del archivo
+
+     //leer el archivo
+     fread(&diccionario,sizeof(Diccionario),1,archivo);
+
+     cout<<"Diccionario de Palabras: "<<endl;
+     cout<<"___________________________________________________________________________________"<<endl;
+     cout<<left<<setw(10)<<"ID"<<"|"<<left<<setw(10)<<"Palabra"<<"|"<<left<<setw(15)<<"Traduccion"<<"|"<<left<<setw(30)<<"Funcionalidad"<<endl;
+     cout<<"___________________________________________________________________________________"<<endl;
+     do
+     {
+        cout<<left<<setw(10)<<id<<"|"<<left<<setw(10)<<diccionario.palabra<<"|"<<left<<setw(15)<<diccionario.traduccion<<"|"<<left<<setw(30)<<diccionario.funcionalidad<<endl;
+        //para que cambie de registro
+        fread(&diccionario,sizeof(Diccionario),1,archivo);
+        id+=1;
+     } while (feof(archivo)==0);
+     fclose(archivo);
+}
+
+void Crear(){
+    FILE* archivo = fopen(nombre_archivo,"a+b");
+    char res;
+    Diccionario diccionario;
+    do
+    {
+        fflush(stdin);
+        cin.ignore();
+        cout<<"Ingrese palabra: "<<endl;
+        cin.getline(diccionario.palabra,50);
+        cout<<"Ingrese traduccion: "<<endl;
+        cin.getline(diccionario.traduccion,50);
+        cout<<"Ingrese funcionalidad: "<<endl;
+        cin.getline(diccionario.funcionalidad,100);
+
+        //almacenamiento de datos
+        fwrite(&diccionario,sizeof(Diccionario),1,archivo);
+
+        cout<<"Desea ingresar otro registro al Diccionario (s/n)"<<endl;
+        cin>>res;
+    } while (res=='s'||res=='S');
+    
+    fclose(archivo);
+    Leer();
+}
+
+void Actualizar(){
+    Leer();
+    FILE* archivo = fopen(nombre_archivo,"r+b");
+    char res;
+    Diccionario diccionario;
+    int id=0;
+    cout<<"Ingrese ID a modificar: "<<endl;
+    cin>>id;  
+        //posicionar el puntero
+        fseek(archivo,id * sizeof(Diccionario),SEEK_SET);
+        cin.ignore();
+        cout<<"Ingrese palabra: "<<endl;
+        cin.getline(diccionario.palabra,50);
+        cout<<"Ingrese traduccion: "<<endl;
+        cin.getline(diccionario.traduccion,50);
+        cout<<"Ingrese funcionalidad: "<<endl;
+        cin.getline(diccionario.funcionalidad,100);
+
+        //almacenamiento de datos
+        fwrite(&diccionario,sizeof(Diccionario),1,archivo);
+
+    fclose(archivo);
+    Leer();
+        cout<<" la Palabra "<<diccionario.palabra<<" con ID: "<<id<<" fue actualizada exitosamente."<<endl;
+         cout<<"                                                                    "<<endl;
+}
