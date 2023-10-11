@@ -1,15 +1,13 @@
-#Include <iostream>
+#include <iostream>
 
-<<<<<<< Updated upstream
+
 using namespace std;
 
 main(){
 
-    cout<<"Proyecto";
-}
-=======
     cout<<"Proyecto"<<endl;
     cout<<"Hola Mundo"<<endl;
     cout<<"Realizando pruebas"<<endl;
+    cout<< "cambios"<<endl;
 }
->>>>>>> Stashed changes
+
