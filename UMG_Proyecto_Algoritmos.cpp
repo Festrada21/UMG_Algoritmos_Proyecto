@@ -204,16 +204,16 @@ void crear() {
     diccionario diccionario;
     do {
         fflush(stdin);
-  
-        cout << "Ingrese Palabra: ";
-        cin >> diccionario.palabra;
-        cin.ignore();
+  		cin.ignore();
 
+        cout << "Ingrese Palabra: ";
+        cin.getline(diccionario.palabra,50);
+       
         cout << "Ingrese Traduccion: ";
         cin.getline(diccionario.traduccion, 50);
 
         cout << "Ingrese Funcionalidad: ";
-        cin.getline(diccionario.funcionalidad, 50);
+        cin.getline(diccionario.funcionalidad, 200);
 
         fwrite(&diccionario, sizeof(diccionario), 1, archivo);
         
@@ -233,16 +233,16 @@ void actualizar() {
     cout << "Ingrese el ID que desea actualizar: ";
     cin >> id;
     fseek(archivo, id * sizeof(diccionario), SEEK_SET);
-
+	cin.ignore();
     cout << "Ingrese la palabra: ";
-    cin >> diccionario.palabra;
-    cin.ignore();
+    //cin >> diccionario.palabra;   
+	cin.getline(diccionario.palabra, 50); 
 
     cout << "Ingrese Traduccion: ";
     cin.getline(diccionario.traduccion, 50);
 
     cout << "Ingrese Funcionalidad: ";
-    cin.getline(diccionario.funcionalidad, 50);
+    cin.getline(diccionario.funcionalidad, 200);
 
     fwrite(&diccionario, sizeof(diccionario), 1, archivo);
 
